@@ -1,0 +1,24 @@
+{
+  "name": "@miloter/text-validator",
+  "version": "1.0.0",
+  "description": "Text validation system with success or error messages.",
+  "main": "text-validator.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "validation",
+    "texts",
+    "fields"
+  ],
+  "author": "miloter",
+  "license": "MIT",
+  "engines": {
+    "node": ">= 13.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/miloter/text-validator.git"
+  }
+}
