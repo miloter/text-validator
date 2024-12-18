@@ -9,42 +9,223 @@ text-validator is an ESM module so you will need to add to your package.json: "t
 npm install @miloter/text-validator
 ```
 
-## Usage
+## Examples
+### Validate integer number in a range
 ```js
 import TextValidator from '@miloter/text-validator';
 
 const tv = new TextValidator();
 
-tv.validateUsername('uk8977df91', { maxLength: 11, fieldTitle: 'Usuario' });    
-tv.validatePassword('ak99-America');
-
-
-tv.validate('mail@mail.com', TextValidator.reMail, TextValidator.errMail);
-if (tv.isNone()) {
-    console.log('The email is correct');
+if (tv.validateInt(111, 1, 256)) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
 }
+if(tv.validateInt('111', 1, 256)) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
+}
+if(tv.validateInt(0, 1, 256) ) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
+}
+if(tv.validateInt('0', 1, 256)) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
+}
+if(tv.validateInt('123.456', 1, 256)) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
+}
+if(tv.validateInt('asdf', 1, 256)) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
+}
+```
+
+### Validate real number in a range
+```js
+import TextValidator from '@miloter/text-validator';
+
+const tv = new TextValidator();
+
+if(tv.validateReal(111, 1, 256)) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
+}
+if(tv.validateReal('111', 1, 256)) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
+}
+if(tv.validateReal(0, 1, 256)) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
+}
+if(tv.validateReal('0', 1, 256)) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
+}
+if(tv.validateReal(123.456, 1, 256)) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
+}
+if(tv.validateReal('123.456', 1, 256)) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
+}
+if(tv.validateReal('asdf', 1, 256)) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
+}
+if(tv.validateReal(1.56, 1.5, 2.25)) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
+}
+if(tv.validateReal(2.26, 1.5, 2.25)) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
+}
+```
+
+### Validate a username
+```js
+import TextValidator from '@miloter/text-validator';
+
+const tv = new TextValidator();
+
+if(tv.validateUsername('uk8977df91', {
+    maxLength: 11,
+    fieldTitle: 'Usuario'
+})) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
+}
+if(tv.validateUsername('uk8977df91', {
+    maxLength: 5,
+    fieldTitle: 'Usuario'
+})) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
+}
+if(tv.validateUsername('1234')) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
+}
+```
+
+### Validate a password
+```js
+import TextValidator from '@miloter/text-validator';
+
+const tv = new TextValidator();
+
+if(tv.validatePassword('1234', { maxLength: 16, fieldTitle: 'Password' })) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
+}
+    
+if (tv.validateUsername('uk8977df91')) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
+}
+```
+
+### Validate a email
+```js
+import TextValidator from '@miloter/text-validator';
+
+const tv = new TextValidator();
+
+if (tv.validateMail('mail@mail.com')) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
+}
+if (tv.validateMail('mail@.com')) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
+}
+if (tv.validateMail('mail@mail.com', 'e-mail')) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
+}
+if (tv.validateMail('mail-too-long12345678901@mail.com')) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
+}
+if (tv.validateMail('mail-too-long-allowerd-12345678901@mail.com', {
+    maxLength: 64
+})) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
+}
+```
+
+### Validate a filename
+```js
+import TextValidator from '@miloter/text-validator';
+
+const tv = new TextValidator();
 
 const filename1 = 'a name  $ %invalid.txt';
 const filename2 = 'imagen-jgp.jpg';
-tv.validateFilename(filename1);
-tv.validateFilename(filename2);
-if (tv.isNone()) {
+
+
+if (tv.validateFilename(filename1)) {
+    console.log(`${filename1} is a valid filename`);
+} else {
+    console.log(tv.getLastMessage());
+}
+
+if (tv.validateFilename(filename2)) {
     console.log(`${filename2} is a valid filename`);
+} else {
+    console.log(tv.getLastMessage());
+}
+```
+
+### Custom validation
+```js
+import TextValidator from '@miloter/text-validator';
+
+const tv = new TextValidator();
+
+const d1 = '2025-03-29';
+const d2 = '2024-12-18';
+const msg = 'The provided date not is great than 2024-12-31';
+
+if (tv.validateAssert(new Date(d1) > new Date('2024-12-31'), msg)) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
 }
 
-if (tv.isError()) {
-    for (const msg of tv.getMsgs()) {
-        console.error(msg);
-    }
-}
-
-if (tv.isSuccess()) {
-    for (const msg of tv.getMsgs()) {
-        console.info(msg);
-    }
-}
-
-if (tv.isNone()) {
-    console.log('No errors or successes');
+if (tv.validateAssert(new Date(d2) > new Date('2024-12-31'), msg)) {
+    console.log('Passed validation');
+} else {
+    console.log(tv.getLastMessage());
 }
 ```
