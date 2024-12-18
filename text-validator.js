@@ -8,7 +8,7 @@ export default class TextValidator {
      */
     static get locale() {
         return Intl.DateTimeFormat().resolvedOptions().locale;
-    }    
+    }
     /**
      * Valida la existencia de algún carácter distinto de espacio en blanco.
      */
@@ -192,6 +192,32 @@ export default class TextValidator {
         }
     }
 
+    /**
+     * Mensaje de error si un número entero no es válido o no esta en el rango requerido.     
+     */
+    static get errRangeNumInt() {
+        switch (TextValidator.locale.substring(0, 2)) {
+            case 'es':
+                return `#msgHeader#'#number#' no es un número entero o no está en el rango: [#minValue#, #maxValue#]`;
+            case 'en':
+            default:
+                return `#msgHeader#'#number#' is not a integer number or is not in the range: [#minValue#, #maxValue#]`;
+        }
+    }
+
+    /**
+     * Mensaje de error si un número real no es válido o no esta en el rango requerido.     
+     */
+    static get errRangeNumReal() {
+        switch (TextValidator.locale.substring(0, 2)) {
+            case 'es':
+                return `#msgHeader#'#number#' no es un número real o no está en el rango: [#minValue#, #maxValue#]`;
+            case 'en':
+            default:
+                return `#msgHeader#'#number#' is not a real number or is not in the range: [#minValue#, #maxValue#]`;
+        }
+    }
+
     // Tipos de mensaje que puede haber
     /**
      * Ningún mensaje
@@ -204,7 +230,7 @@ export default class TextValidator {
     /**
      * Hay mensajes de error
      */
-    static get #msgError() { return 2; }    
+    static get #msgError() { return 2; }
 
     #typeMsgs; // Tipo de mensajes
     #msgs; // Lista de mensajes
@@ -395,6 +421,84 @@ export default class TextValidator {
     validateMail(text, { maxLength = 32, fieldTitle = '' } = {}) {
         return this.validate(text, TextValidator.reMail,
             TextValidator.errMail, { maxLength, fieldTitle });
+    }
+
+    /**
+     * Valida un número entero dentro de un rango.
+     * @param {number|string} value Número a validar.
+     * @param {number} minValue Mínimo valor incluido.
+     * @param {number} maxValue Máximo valor incluido.
+     * @param {object} {
+     *      errRangeNumInt = TextValidator.errRangeNumInt,
+     *      fieldTitle = ''
+     * } Propiedades de validación opcionales.
+     */
+    validateInt(value, minValue, maxValue, {
+        errRangeNumInt = TextValidator.errRangeNumInt,
+        fieldTitle = ''
+    } = {}) {
+        const num = Number(value);
+        let pass = true;
+        const msgHeader = fieldTitle && `"${fieldTitle}": `;
+
+        if (!isFinite(num) || Math.round(num) !== num || num < minValue || num > maxValue) {
+            pass = false;
+            this.addError(errRangeNumInt
+                .replace('#msgHeader#', msgHeader)
+                .replace('#number#', value)
+                .replace('#minValue#', minValue)
+                .replace('#maxValue#', maxValue)
+            );
+        }
+
+        return pass;
+    }
+
+    /**
+     * Valida un número real dentro de un rango.
+     * @param {number|string} value Número a validar.
+     * @param {number} minValue Mínimo valor incluido.
+     * @param {number} maxValue Máximo valor incluido.
+     * @param {object} {
+     *      errRangeNumReal = TextValidator.errRangeNumReal,
+     *      fieldTitle = ''
+     * } Propiedades de validación opcionales.
+     */
+    validateReal(value, minValue, maxValue, {
+        errRangeNumReal = TextValidator.errRangeNumReal,
+        fieldTitle = ''
+    } = {}) {
+        const num = Number(value);
+        let pass = true;
+        const msgHeader = fieldTitle && `"${fieldTitle}": `;
+
+        if (!isFinite(num) || num < minValue || num > maxValue) {
+            pass = false;
+            this.addError(errRangeNumReal
+                .replace('#msgHeader#', msgHeader)
+                .replace('#number#', value)
+                .replace('#minValue#', minValue)
+                .replace('#maxValue#', maxValue)
+            );
+        }
+
+        return pass;
+    }
+
+    /**
+     * Si una aserción no es true se agrega un mensaje de error personalizado.
+     * Si el mensaje no se suministra no se agrega a los errores.
+     * De devuelve el valor de la aserción.
+     * @param {boolean} assertTrue 
+     * @param {string} msgError 
+     * @returns {boolean}
+     */
+    validateAssert(assertTrue, msgError = '') {
+        if (!assertTrue && msgError) {
+            this.addError(msgError);
+        }
+
+        return assertTrue;
     }
 
     /**
