@@ -1,6 +1,6 @@
 {
   "name": "@miloter/text-validator",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Text validation system with success or error messages.",
   "main": "text-validator.js",
   "type": "module",
