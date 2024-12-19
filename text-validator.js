@@ -59,6 +59,14 @@ export default class TextValidator {
      */
     static get reURLSection() { return /^[\p{L}\d_-]+$/u; }
     /**
+     * Valida un número entero (solo la sintaxis, puede estar fuera de rango).
+     */
+    static get reNumInt() { return /^[+-]?\d+$/; }
+    /**
+     * Valida un número real (solo la sintaxis, puede estar fuera de rango).
+     */
+    static get reNumReal() { return /^[+-]?(?:\d+(?:\.(?:\d+)?)|\.\d+)(?:[Ee][+-]?\d+)?$/; }
+    /**
      * Mensaje de error para un usuario no válido
      */
     static get errUsername() {
@@ -441,7 +449,7 @@ export default class TextValidator {
         let pass = true;
         const msgHeader = fieldTitle && `"${fieldTitle}": `;
 
-        if (!isFinite(num) || Math.round(num) !== num || num < minValue || num > maxValue) {
+        if (!(TextValidator.reNumInt.test(value) && isFinite(num)) || num < minValue || num > maxValue) {
             pass = false;
             this.addError(errRangeNumInt
                 .replace('#msgHeader#', msgHeader)
@@ -472,7 +480,7 @@ export default class TextValidator {
         let pass = true;
         const msgHeader = fieldTitle && `"${fieldTitle}": `;
 
-        if (!isFinite(num) || num < minValue || num > maxValue) {
+        if (!(TextValidator.reNumReal.test(value) && isFinite(num)) || num < minValue || num > maxValue) {
             pass = false;
             this.addError(errRangeNumReal
                 .replace('#msgHeader#', msgHeader)
