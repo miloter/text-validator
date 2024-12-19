@@ -26,7 +26,7 @@ if(tv.validateInt('111', 1, 256)) {
 } else {
     console.log(tv.getLastMessage());
 }
-if(tv.validateInt(0, 1, 256) ) {
+if(tv.validateInt(true, 1, 256) ) {
     console.log('Passed validation');
 } else {
     console.log(tv.getLastMessage());
@@ -64,7 +64,7 @@ if(tv.validateReal('111', 1, 256)) {
 } else {
     console.log(tv.getLastMessage());
 }
-if(tv.validateReal(0, 1, 256)) {
+if(tv.validateReal(true, 1, 256)) {
     console.log('Passed validation');
 } else {
     console.log(tv.getLastMessage());
